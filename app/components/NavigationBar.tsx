@@ -7,7 +7,10 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 
-const pages = [{ name: "Pdf", href: "/pdf" }];
+const pages = [
+  { name: "Pdf", href: "/pdf" },
+  { name: "CSV", href: "/csv" },
+];
 
 export default function NavigationBar() {
   return (
