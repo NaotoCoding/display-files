@@ -13,23 +13,25 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export default function PdfViewer({ pdfPath }: { pdfPath: string }) {
-  const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>();
+  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
 
   useEffect(() => {
-    setPageNumber(1);
+    setCurrentPageNumber(1);
   }, [pdfPath]);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
-    setNumPages(numPages);
+    setTotalPages(numPages);
   }
 
   const goToPrevPage = () => {
-    setPageNumber((prev) => (prev <= 1 ? 1 : prev - 1));
+    setCurrentPageNumber((prev) => (prev <= 1 ? 1 : prev - 1));
   };
 
   const goToNextPage = () => {
-    setPageNumber((prev) => (prev >= numPages! ? numPages! : prev + 1));
+    setCurrentPageNumber((prev) =>
+      prev >= totalPages! ? totalPages! : prev + 1
+    );
   };
 
   return (
@@ -40,17 +42,22 @@ export default function PdfViewer({ pdfPath }: { pdfPath: string }) {
         alignItems: "center",
       }}
     >
-      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
-        <IconButton onClick={goToPrevPage} disabled={pageNumber <= 1}>
-          <ChevronLeft />
-        </IconButton>
-        <Typography>
-          Page {pageNumber} of {numPages}
-        </Typography>
-        <IconButton onClick={goToNextPage} disabled={pageNumber >= numPages!}>
-          <ChevronRight />
-        </IconButton>
-      </Stack>
+      {totalPages && (
+        <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+          <IconButton onClick={goToPrevPage} disabled={currentPageNumber <= 1}>
+            <ChevronLeft />
+          </IconButton>
+          <Typography>
+            Page {currentPageNumber} of {totalPages}
+          </Typography>
+          <IconButton
+            onClick={goToNextPage}
+            disabled={currentPageNumber >= totalPages!}
+          >
+            <ChevronRight />
+          </IconButton>
+        </Stack>
+      )}
 
       <Box
         sx={{
@@ -60,7 +67,7 @@ export default function PdfViewer({ pdfPath }: { pdfPath: string }) {
         }}
       >
         <Document file={pdfPath} onLoadSuccess={onDocumentLoadSuccess}>
-          <Page pageNumber={pageNumber} />
+          <Page pageNumber={currentPageNumber} />
         </Document>
       </Box>
     </Box>
