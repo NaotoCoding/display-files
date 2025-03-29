@@ -2,11 +2,10 @@
 
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-import LoadingPage from "../components/LoadingPage";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -16,16 +15,13 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 export default function PdfViewer({ pdfPath }: { pdfPath: string }) {
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pdfLoaded, setPdfLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    setPdfLoaded(false);
     setPageNumber(1);
   }, [pdfPath]);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
     setNumPages(numPages);
-    setPdfLoaded(true);
   }
 
   const goToPrevPage = () => {
@@ -44,7 +40,6 @@ export default function PdfViewer({ pdfPath }: { pdfPath: string }) {
         alignItems: "center",
       }}
     >
-      {!pdfLoaded && <LoadingPage />}
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
         <IconButton onClick={goToPrevPage} disabled={pageNumber <= 1}>
           <ChevronLeft />
