@@ -1,33 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/TextLayer.css";
-import "react-pdf/dist/Page/AnnotationLayer.css";
+import { Stack } from "@mui/material";
+import dynamic from "next/dynamic";
 
-export default function Pdf() {
-  useEffect(() => {
-    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-      "pdfjs-dist/build/pdf.worker.min.mjs",
-      import.meta.url
-    ).toString();
-  }, []);
+const PdfViewer = dynamic(() => import("./_PdfViewer"), {
+  ssr: false,
+});
 
-  const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
-
-  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
-    setNumPages(numPages);
-  }
-
+export default function PdfPage() {
   return (
-    <div>
-      <Document file="/sample.pdf" onLoadSuccess={onDocumentLoadSuccess}>
-        <Page pageNumber={pageNumber} />
-      </Document>
-      <p>
-        Page {pageNumber} of {numPages}
-      </p>
-    </div>
+    <Stack sx={{ p: 2 }}>
+      <PdfViewer pdfPath="https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf" />
+    </Stack>
   );
 }
