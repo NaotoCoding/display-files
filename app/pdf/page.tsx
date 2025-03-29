@@ -10,7 +10,7 @@ import {
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
-const PdfViewer = dynamic(() => import("./_PdfViewer"), {
+const PdfViewer = dynamic(() => import("./components/PdfViewer"), {
   ssr: false,
 });
 
